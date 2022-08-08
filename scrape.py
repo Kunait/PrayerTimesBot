@@ -10,36 +10,40 @@ import keyboard
 
 async def main(country_code,city_code):
     # launch chromium browser in the background
-    browser = await launch({"headless": False})
+    browser = await launch(headless=False, args=['--disable-infobars', f'--window-size={1920},{1080}'])
     # open a new tab in the browser
     page = await browser.newPage()
+
+    await page.setViewport({
+    'width': 1920, 'height': 1080})
     
     # add URL to a new page and then open it
-    await page.goto("https://fazilettakvimi.com/namaz-vakitleri/")
+    await page.goto("https://www.semerkandtakvimi.com")
     await page.waitFor(2000)
     
    
     
-    print(country_code)
-    await page.type("div.Bolge_ulke__3t04j select",country_code)
-    await page.keyboard.press("Enter")
-    await page.waitFor(1000)
+    await page.click("#select2-country-list-container")
+    await page.waitFor(200)
+    await page.keyboard.type(country_code)
     
-    #await page.select("div.Bolge_ulke__3t04j select",country_code)
-    
-    #await page.select("div.Bolge_sehir__1Gle0 select",city_code)
-    print(city_code)
-    await page.type("div.Bolge_sehir__1Gle0 select",city_code)
     await page.keyboard.press("Enter")
 
+    await page.click("#select2-city-list-container")
+    await page.waitFor(200)
+    await page.keyboard.type(city_code)
+    
+    await page.keyboard.press("Enter")
+
+    
     
     await page.waitFor(1000)
     # create a screenshot of the page and save it
-    await page.screenshot({"path": "python.png"})
+    screen = await page.xpath("/html/body/div[2]/div/section[2]/div/div")
+    await screen[0].screenshot({"path": "python.png"})
     #await page.waitFor(20000)
     # close the browser
     await browser.close()
-
 
 
 
