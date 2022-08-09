@@ -6,7 +6,9 @@ from time import sleep
 import traceback
 from pyppeteer import launch
 import tweepy
-import keyboard
+from sys import platform
+#import keyboard
+
 
 def delete(api):
 
@@ -18,9 +20,12 @@ def delete(api):
                 print("Failed to delete:", status.id)
     exit()
 
-async def main(country_code,city_code):
+async def main(country_code,city_code,linux):
     # launch chromium browser in the background
-    browser = await launch(headless=True, args=['--disable-infobars', f'--window-size={1920},{1080}'])
+    if(not linux):
+     browser = await launch(headless=True, args=['--disable-infobars', f'--window-size={1920},{1080}'])
+    else:
+     browser = await launch(headless=True, executablePath= '/usr/bin/chromium', args=['--disable-infobars', f'--window-size={1920},{1080}'])
     # open a new tab in the browser
     page = await browser.newPage()
 
@@ -65,6 +70,12 @@ async def main(country_code,city_code):
     # close the browser
     await browser.close()
 
+linux = False
+
+if platform == "linux" or platform == "linux2":
+    linux= True
+elif platform == "win32":
+    linux = False
 
 
 with open("apidata.txt", "r") as f:
@@ -97,8 +108,8 @@ api = tweepy.API(auth)
 i = 0
 j=0
 while i == 0:
-    if keyboard.is_pressed("q"):
-        break
+    #if keyboard.is_pressed("q"):
+        #break
     tweets = api.search_tweets(q = "@"+splitted[4], result_type ="recent", count=50,tweet_mode="extended")
     for j in range(0,len(tweets)):
      if(tweets[j] != []):
