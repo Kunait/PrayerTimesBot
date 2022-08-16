@@ -9,7 +9,7 @@ import tweepy
 from sys import platform
 #import keyboard
 
-#Diese Funktion wird nur aufgerufen um vorherige Tweets zu löschen!
+# this function is only called to reset tweets
 def delete(api):
     print("DELETE")
     for status in tweepy.Cursor(api.user_timeline).items():
@@ -21,7 +21,7 @@ def delete(api):
     exit()
 
 
-#Diese Funktion startet einen Browser und führt die Anfragen aus
+# function launches browser to execute request
 async def main(country_code,city_code,linux):
     # launch chromium browser in the background
     if(not linux):
